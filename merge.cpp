@@ -14,7 +14,8 @@ using namespace std;
 using namespace std::chrono;
 
 //void *merge (int *array, int n, int m, int len);
-void *merge (int *a, int *b);
+void merge (int array[], int left, int mid, int right, int &copies);
+void mergesort(int array[], int left, int right, int &copies);
 int main (int check, char *yeah[])
 {
 
@@ -26,6 +27,8 @@ int i;
 int r;
 int j;
 int modnum = 10;
+int count =0;
+int copies =0;
 j=0;
 srand(time(NULL));
 
@@ -51,88 +54,90 @@ return 0;
 }
 
 int array[num];
-
 for (i=0; i < num; i++)
 {
-r = rand() % modnum;
-array[i] = r;
-cout <<array[i] << " ";
+	r = rand() % modnum;
+	array[i] = r;
+	++count;
+	cout <<array[i] << " ";
 }
 cout << endl;;
 
-n=num/2;
-m=0;
-len=num;
-int a[n];
-int b[n];
+mergesort(array, 0, count-1, copies);
 
-for (i=0; i < n; i++)
+for (j=0; j < num; ++j)
 {
-a[i]=array[i];
+	cout << array[j] << " ";
 }
-
-for (i=n; i < num; i++)
+cout << endl;
+cout << "Number of copies = " << copies << endl;
+}
+//---------------------------------------------------------------------------
+void mergesort(int array[], int left, int right, int &copies)
 {
-b[j]=array[i];
-j++;
+if(left < right)
+{
+	int mid = left+(right-left)/2;
+	mergesort(array, left, mid, copies);
+	mergesort(array, mid+1, right, copies);
+	merge(array, left, mid, right, copies);
 }
-
-//merge(array, n, m, len);
-return merge(a, b);
 
 
 }
 
 
 //-----------------------------------------------------------------------------
-//len = length of array
-//n = half of length
-//m = 0
-//
-//
-//void *merge(int *array, int n, int m, int len)
-int *merge(int *a, int *b)
+void merge(int array[], int left, int mid, int right, int &copies)
 {
-int num = 10;
-int n = num/2;
-int i =0; //index for array a
-int j =0; //index for array b
-int c[num];
 
-while (i != n && j != n)
+int n1 = mid - left + 1;
+int n2 = right - mid;
+int i; //index for array a
+int j; //index for array b
+int k;
+int Llist[n1];
+int Rlist[n2];
+
+for (i=0; i < n1; ++i)
+	Llist[i] = array[left + i];
+for (j=0; j < n2; ++j)
+	Rlist[j] = array[mid + 1 + j];
+
+i=0;
+j=0;
+k=left;
+while (i < n1 && j < n2)
 {
-	if (a[i] > b[j])
+	if (Llist[i] <= Rlist[j])
 	{
-		c[num] = b[j];
-		++j;
-		--num;
+		array[k] = Llist[i];
+		++i;
+		++copies;
 	}
 	else
 	{
-		c[num] = a[i];
-		++i;
-		--num;
+		array[k] = Rlist[j];
+		++j;
+		++copies;
 	}
+	++k;
 
 }
-while (i != n)
+while (i < n1)
 {
-	c[num] = a[i];
+	array[k] = Llist[i];
 	++i;
-	--num;
+	++k;
+	++copies;
 }
-while (j != n)
+while (j < n2)
 {
-	c[num] = b[j];
+	array[k] = Rlist[j];
 	++j;
-	--num;
+	++k;
+	++copies;
 }
-for (int k =0; k < 10; ++k)
-{
-	cout << c[k] << " ";
-}
-cout << endl;
-return c;
 
 
 }
