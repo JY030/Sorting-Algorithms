@@ -54,13 +54,11 @@ if lo < hi
 
 long Hoarepartition(long A[], long low,  long high, long &numswap)
 {
-//	long random = rand() % high;//random pivot causes stack overflow at lower numbers even at size 50 or placed in hoare partition
-	long pivot = A[low];// Actually random pivot because of the swap in randompivot function
+	long random = low + rand() % (high - low); // random pivot Taken from https://www.geeksforgeeks.org/quicksort-using-random-pivoting/
+//	long random = rand() % high;//old random pivot code causes stack overflow at lower numbers even at size 50 or placed in hoare partition
 	//long random = rand() % high;
-	//long pivot = A[random]; //Gets caught in a loop and doesn't seem to end when importing a random pivot into the function after array size 10
-	// can also stackoverflow at size 10
-	
-//	long pivot = A[(low + high) / 2]; //chose this pivot because even at lower numbers using rand above either causes a loop that seems to never end or a stack overflow
+	long pivot = A[random]; 
+//	long pivot = A[(low + high) / 2]; //old choice of pivot because even at lower numbers using rand above either causes a loop that seems to never end or a stack overflow
 	long y = low - 1;
 	long z = high + 1;
 	while (true)
@@ -87,19 +85,12 @@ long Hoarepartition(long A[], long low,  long high, long &numswap)
 	}
 }
 
-long randompivot(long A[], long low, long high, long &numswaps) // taken from geekforgeeks.org
-{
-	long random = low + rand() % (high-low); 
-	swap(A[random], A[low]); 
-	return Hoarepartition(A, low, high, numswaps);
-}
 
 void Quicksort(long *A, long low, long high, long &numswap)
 {
 	if(low < high)
 	{
-		long partitionindex = randompivot(A, low, high, numswap);
-//		long partitionindex = Hoarepartition(A, low, high, numswap);
+		long partitionindex = Hoarepartition(A, low, high, numswap);
 		Quicksort(A, low, partitionindex, numswap);
 		Quicksort(A, partitionindex + 1, high, numswap);
 
@@ -237,7 +228,7 @@ int main()
 
 
 
-	for (int a = 1; a < 6; a++) // a = 6 for 1 million
+	for (int a = 1; a < 6; a++) // a = 6 for 1 million, 7 for 10 million data
 	{
 		cout << "Testing for Array Size: " << size << endl;
 		long *array0 = new long[size];//default array to reset to make sure to never manipulate
@@ -293,7 +284,7 @@ int main()
 		//	auto stop3 = std::chrono::high_resolution_clock::now(); //end timer
 		//	auto duration3 = duration_cast<microseconds>(stop3 - start3); //timer in micro seconds
 		//	cout << "Basic C++ sort time: " << duration3.count() << " microseconds" << endl;
-		cout << "Staring Mergesort Test for Array Size: "<< size << endl;
+		cout << "Starting Mergesort Test for Array Size: "<< size << endl;
 		mergeTime << "Array Size:" << "\t" << size << endl;
 		mergeTime << "Execution Time(microseconds)" << "\t" << "Number of Copies" << "\t" << "PASS/FAIL" << endl;
 		for (int i = 0; i < 30; i++) //warming the cache tested
@@ -343,7 +334,7 @@ int main()
 		*/
 		}
 		cout << "Finished Mergesort Test for Array Size: " << size << endl;
-		cout << "Staring Quickesort Test for Array Size: " << size << endl;
+		cout << "Starting Quickesort Test for Array Size: " << size << endl;
 		for (int i = 0; i < 30; i++) //warming the cache tested
 		{
 			Quicksort(array1, 0, size - 1, numswap);
@@ -385,7 +376,7 @@ int main()
 	auto stop0 = std::chrono::high_resolution_clock::now(); //end timer
 	auto duration0 = duration_cast<seconds>(stop0 - start0); //timer in micro seconds
 	cout << endl;
-	cout << "The Program took " << duration0.count() << "Seconds to complete" <<endl;
+	cout << "The Program took " << duration0.count() << " Seconds to complete" <<endl;
 	return 0;
 
 }
