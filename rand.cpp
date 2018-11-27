@@ -239,10 +239,11 @@ int main()
 
 	//	ofstream Unsorted;
 	//	Unsorted.open("random.txt"); dont't need this was for testing purposes for seeing the random array
-
+	long mergesortTime[size]; //mergesort averages
+	long quicksortTime[size]; //Quicksort averages
 	
 
-	for (int a = 1; a < 6; a++) // a = 6 for 1 million, 7 for 10 million data
+	for (int a = 1; a < 7; a++) // a = 6 for 1 million, 7 for 10 million data
 	{
 		cout << "Testing for Array Size: " << size << endl;
 		long *array0 = new long[size];//default array to reset to make sure to never manipulate
@@ -250,8 +251,6 @@ int main()
 		long *array2 = new long[size]; //default sort array
 		long *array3 = new long[size]; //mergesort array
 
-		long mergesortTime[size]; //mergesort averages
-		long quicksortTime[size]; //Quicksort averages
 
 		cout << "Setting Random Array for Array Size:" << size << endl;
 		for (long i = 0; i < size; i++) //initialize array
@@ -460,15 +459,20 @@ int main()
 			else
 				flag = 1;
 		}
-
+		
+		averagemerge << "Array Size:" << "\t" << size << endl;
+		averagequick << "Array Size:" << "\t" << size << endl;
+		quickTime << "Execution Time(microseconds) & Removed Outliers" << endl;
+		
 		for (int i = 0; i < run; ++i)
 		{
-			averagemerge << mergesortTime[i] << " ";
+			averagemerge << mergesortTime[i];
 			averagemerge << endl;
-			averagequick << quicksortTime[i] << " ";
+			averagequick << quicksortTime[i];
 			averagequick << endl;
 		}
-
+		averagemerge << endl;
+		averagequick << endl;
 
 		delete[] array0;
 		delete[] array1;
