@@ -462,7 +462,8 @@ int main()
 		
 		averagemerge << "Array Size:" << "\t" << size << endl;
 		averagequick << "Array Size:" << "\t" << size << endl;
-		quickTime << "Execution Time(microseconds) & Removed Outliers" << endl;
+		averagemerge << "Execution Time(microseconds) & Removed Outliers" << endl;
+		averagequick << "Execution Time(microseconds) & Removed Outliers" << endl;
 		
 		for (int i = 0; i < run; ++i)
 		{
