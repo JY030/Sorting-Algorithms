@@ -1,5 +1,5 @@
 
-#include "pch.h" //visual studios includes it's own header file to be compiled
+//#include "pch.h" //visual studios includes it's own header file to be compiled
 #include <iostream>
 #include <chrono>
 #include <stdio.h>      /* NULL */
@@ -52,13 +52,13 @@ if lo < hi
 	quicksort(arr, p + 1, hi)
 */
 
-long Hoarepartition(long A[], long low,  long high, long &numswap)
+long Hoarepartition(long A[], long low, long high, long &numswap)
 {
 	long random = low + rand() % (high - low); // random pivot Taken from https://www.geeksforgeeks.org/quicksort-using-random-pivoting/
 //	long random = rand() % high;//old random pivot code causes stack overflow at lower numbers even at size 50 or placed in hoare partition
 	//long random = rand() % high;
-	long pivot = A[random]; 
-//	long pivot = A[(low + high) / 2]; //old choice of pivot because even at lower numbers using rand above either causes a loop that seems to never end or a stack overflow
+	long pivot = A[random];
+	//	long pivot = A[(low + high) / 2]; //old choice of pivot because even at lower numbers using rand above either causes a loop that seems to never end or a stack overflow
 	long y = low - 1;
 	long z = high + 1;
 	while (true)
@@ -88,7 +88,7 @@ long Hoarepartition(long A[], long low,  long high, long &numswap)
 
 void Quicksort(long *A, long low, long high, long &numswap)
 {
-	if(low < high)
+	if (low < high)
 	{
 		long partitionindex = Hoarepartition(A, low, high, numswap);
 		Quicksort(A, low, partitionindex, numswap);
@@ -98,7 +98,7 @@ void Quicksort(long *A, long low, long high, long &numswap)
 
 }
 
-void merge(long array[], long left, long mid,  long right,  long &copies)
+void merge(long array[], long left, long mid, long right, long &copies)
 {
 	long n1 = mid - left + 1;
 	long n2 = right - mid;
@@ -160,7 +160,7 @@ void mergesort(long array[], long left, long right, long &copies)
 	}
 }
 
-long arraychecker(long array1[], long array2[],  long size) //array1 is compared to array2 where array 2 is default sort oracle test
+long arraychecker(long array1[], long array2[], long size) //array1 is compared to array2 where array 2 is default sort oracle test
 {
 	int fail = 0;
 	for (int i = 0; i < size; i++)
@@ -182,7 +182,7 @@ long arraychecker(long array1[], long array2[],  long size) //array1 is compared
 	}
 }
 
-void myranshuffle( long *array0, long *array1,  long *array2,  long *array3, long size)
+void myranshuffle(long *array0, long *array1, long *array2, long *array3, long size)
 {
 	for (long i = 0; i < size; i++)
 	{
@@ -218,24 +218,40 @@ int main()
 	long numswap = 0;
 	int fail = 0;
 	long copies = 0;
+	int n, o;
+	int flag = 0;
+	double loop;
+	long double mean = 0;
+	long double iqr = 0;
+	long double Q1 = 0;
+	long double Q3 = 0;
+	long double Q3start = 0;
+	long run = 20; // data size 
 	//num = sizeofarray;
 	ofstream mergeTime;
 	mergeTime.open("mergesortTime.txt");
 	ofstream quickTime;
 	quickTime.open("quickTime.txt");
-//	ofstream Unsorted;
-//	Unsorted.open("random.txt"); dont't need this was for testing purposes for seeing the random array
+	ofstream averagemerge;
+	averagemerge.open("averagemerge.txt");
+	ofstream averagequick;
+	averagequick.open("averagequick.txt");
 
+	//	ofstream Unsorted;
+	//	Unsorted.open("random.txt"); dont't need this was for testing purposes for seeing the random array
+	long mergesortTime[size]; //mergesort averages
+	long quicksortTime[size]; //Quicksort averages
+	
 
-
-	for (int a = 1; a < 6; a++) // a = 6 for 1 million, 7 for 10 million data
+	for (int a = 1; a < 7; a++) // a = 6 for 1 million, 7 for 10 million data
 	{
 		cout << "Testing for Array Size: " << size << endl;
 		long *array0 = new long[size];//default array to reset to make sure to never manipulate
 		long *array1 = new long[size]; //visual studios doesn't like declared array[variable] quicksory array
 		long *array2 = new long[size]; //default sort array
 		long *array3 = new long[size]; //mergesort array
-		
+
+
 		cout << "Setting Random Array for Array Size:" << size << endl;
 		for (long i = 0; i < size; i++) //initialize array
 		{
@@ -246,45 +262,45 @@ int main()
 		}
 		myranshuffle(array0, array1, array2, array3, size); //randomizes array for same random data
 		cout << "Finished Setting up Random Array for Array Size:" << size << endl;
-	 //check if the arrays are created correctly which they are
-	/*	int results0 = arraychecker(array0, array2, size);
-		if (results0 == 0)
-		{
-			cout << "PASS" << endl;
-		}
-		if (results0 == 1)
-		{
-			cout << "FAIL" << endl;
-		}
+		//check if the arrays are created correctly which they are
+	   /*	int results0 = arraychecker(array0, array2, size);
+		   if (results0 == 0)
+		   {
+			   cout << "PASS" << endl;
+		   }
+		   if (results0 == 1)
+		   {
+			   cout << "FAIL" << endl;
+		   }
 
-		int results1 = arraychecker(array3, array2, size);
-		if(results1 == 0)
-		{
-			cout << "PASS" << endl;
-		}
-		if (results1 == 1)
-		{
-			cout << "FAIL" << endl;
-		}
-		int results2 = arraychecker(array1, array2, size);
-		if(results2 == 0)
-		{
-			cout << "PASS" << endl;
-		}
-		if (results2 == 1)
-		{
-			cout << "FAIL" << endl;
-		}
-	//*/
+		   int results1 = arraychecker(array3, array2, size);
+		   if(results1 == 0)
+		   {
+			   cout << "PASS" << endl;
+		   }
+		   if (results1 == 1)
+		   {
+			   cout << "FAIL" << endl;
+		   }
+		   int results2 = arraychecker(array1, array2, size);
+		   if(results2 == 0)
+		   {
+			   cout << "PASS" << endl;
+		   }
+		   if (results2 == 1)
+		   {
+			   cout << "FAIL" << endl;
+		   }
+	   //*/
 
-	//	auto start3 = std::chrono::high_resolution_clock::now(); //start timer
+	   //	auto start3 = std::chrono::high_resolution_clock::now(); //start timer
 		cout << "Creating Test Oracle for Array Size:" << size << endl;
 		sort(array2, array2 + size);
 		cout << "Finished Creating Test Oracle" << endl;
 		//	auto stop3 = std::chrono::high_resolution_clock::now(); //end timer
 		//	auto duration3 = duration_cast<microseconds>(stop3 - start3); //timer in micro seconds
 		//	cout << "Basic C++ sort time: " << duration3.count() << " microseconds" << endl;
-		cout << "Starting Mergesort Test for Array Size: "<< size << endl;
+		cout << "Starting Mergesort Test for Array Size: " << size << endl;
 		mergeTime << "Array Size:" << "\t" << size << endl;
 		mergeTime << "Execution Time(microseconds)" << "\t" << "Number of Copies" << "\t" << "PASS/FAIL" << endl;
 		for (int i = 0; i < 30; i++) //warming the cache tested
@@ -299,6 +315,7 @@ int main()
 			mergesort(array3, 0, size - 1, copies);
 			auto stop = std::chrono::high_resolution_clock::now(); //end timer
 			auto duration = duration_cast<microseconds>(stop - start); //timer in micro seconds
+
 			//array3[0] = 77777; // to cause mergeresult to fail to test PASS FAIL write to text
 		//	auto start2 = std::chrono::high_resolution_clock::now(); //start timer
 		//	sort(array2, array2 + size);
@@ -314,6 +331,7 @@ int main()
 			if (mergeresults == 0)
 			{
 				mergeTime << "PASS" << endl;
+				mergesortTime[i] = duration.count();
 			}
 			if (mergeresults == 1)
 			{
@@ -333,6 +351,7 @@ int main()
 		}
 		*/
 		}
+
 		cout << "Finished Mergesort Test for Array Size: " << size << endl;
 		cout << "Starting Quickesort Test for Array Size: " << size << endl;
 		for (int i = 0; i < 30; i++) //warming the cache tested
@@ -355,6 +374,7 @@ int main()
 			if (Quickresults == 0)
 			{
 				quickTime << "PASS" << endl;
+				quicksortTime[i] = duration2.count();
 			}
 			if (Quickresults == 1)
 			{
@@ -363,6 +383,96 @@ int main()
 			numswap = 0;
 			resetArray(array0, array1, size);
 		}
+		cout << "Finished Quicksort Test for Array Size: " << size << endl;
+
+		mergesort(mergesortTime, 0, run - 1, copies); //sorts the data measurements for mergesort from least to greatest
+	/*	for (int i = 0; i < run; ++i)
+		{
+			cout << mergesortTime[i] << " ";
+		}
+		cout << endl;
+*/
+		mergesort(quicksortTime, 0, run - 1, copies); //sorts the data measurements for quicksort from least to greatest
+/*		for (int i = 0; i < run; ++i)
+		{
+			cout << quicksortTime[i] << " ";
+		}
+		cout << endl;
+*/
+		while (flag == 0)
+		{
+			for (int i = 0; i < run; ++i)
+				mean = mean + mergesortTime[i];
+			mean = mean / run;
+			iqr = run / 4;
+			Q3start = ceil(iqr * 3);
+			for (n = 1; n < ceil(iqr); ++n)
+			{
+				Q1 = Q1 + mergesortTime[n];
+			}
+			Q1 = Q1 / n;
+			for (o = 1; o < Q3start; ++o)
+			{
+				Q3 = Q3 + mergesortTime[o];
+			}
+			Q3 = Q3 / o;
+			iqr = Q3 - Q1;
+			loop = 1.5 * iqr;
+			if (mergesortTime[run - 1] - mean > loop)
+			{
+				mergesortTime[run] = 0;
+				--run;
+			}
+			else
+				flag = 1;
+		}
+
+		flag = 0;
+		Q1 = 0;
+		Q3 = 0;
+		mean = 0;
+
+		while (flag == 0)
+		{
+			for (int i = 0; i < run; ++i)
+				mean = mean + quicksortTime[i];
+			mean = mean / run;
+			iqr = run / 4;
+			Q3start = ceil(iqr * 3);
+			for (n = 1; n < ceil(iqr); ++n)
+			{
+				Q1 = Q1 + quicksortTime[n];
+			}
+			Q1 = Q1 / n;
+			for (o = 1; o < Q3start; ++o)
+			{
+				Q3 = Q3 + quicksortTime[o];
+			}
+			Q3 = Q3 / o;
+			iqr = Q3 - Q1;
+			loop = 1.5 * iqr;
+			if (quicksortTime[run - 1] - mean > loop)
+			{
+				quicksortTime[run] = 0;
+				--run;
+			}
+			else
+				flag = 1;
+		}
+		
+		averagemerge << "Array Size:" << "\t" << size << endl;
+		averagequick << "Array Size:" << "\t" << size << endl;
+		quickTime << "Execution Time(microseconds) & Removed Outliers" << endl;
+		
+		for (int i = 0; i < run; ++i)
+		{
+			averagemerge << mergesortTime[i];
+			averagemerge << endl;
+			averagequick << quicksortTime[i];
+			averagequick << endl;
+		}
+		averagemerge << endl;
+		averagequick << endl;
 
 		delete[] array0;
 		delete[] array1;
@@ -370,13 +480,13 @@ int main()
 		delete[] array3;
 		mergeTime << endl;
 		quickTime << endl;
-		cout << "Finished Quicksort Test for Array Size: " << size << endl;
+
 		size = size * 10; //increase array size by power of 10
 	}
 	auto stop0 = std::chrono::high_resolution_clock::now(); //end timer
 	auto duration0 = duration_cast<seconds>(stop0 - start0); //timer in micro seconds
 	cout << endl;
-	cout << "The Program took " << duration0.count() << " Seconds to complete" <<endl;
+	cout << "The Program took " << duration0.count() << " Seconds to complete" << endl;
 	return 0;
 
 }
