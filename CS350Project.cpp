@@ -22,7 +22,8 @@ void swap(long* x, long* y)
 	*y = temp;
 }
 
-//PsuedoCode Random pivot was used from https://www.geeksforgeeks.org/quicksort-using-random-pivoting/
+//PsuedoCode Random pivot and Quicksort recursion was used from https://www.geeksforgeeks.org/quicksort-using-random-pivoting/
+//Hoare's Partition Pseudo code is used from the book Introduction to Algorithms by Thomas H. Cormen
 //Was having trouble choosing random pivot because choosing random pivot in the hoare partition caused the code to never end after the array size became larger then 10
 /*partition(arr[], lo, hi)
 pivot = arr[lo]
